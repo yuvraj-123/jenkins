@@ -1,0 +1,112 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+
+  Sample SAM Template for lambda1
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 900
+
+Parameters:
+    
+  LambdaFunctionName:
+    Type: String
+    Description: Enter the lambda function name.
+
+  Cron:
+    Type: String
+    Description: cron expression
+    Default: cron(0/2 * * * ? *)
+
+  DEV_SITE:
+    Type: String
+    Description: cron expression
+    Default: https://xyz.revnue.com
+
+  SITE:
+    Type: String
+    Description: cron expression
+    Default: https://xyz.revnue.com
+
+  Expected:
+    Type: String
+    Description: cron expression
+    Default: OK
+
+  VPCId: 
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID
+
+  PrivateSubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: ID Of subnet for vpc endpoint
+
+
+Resources:
+  testlambda1:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: backend_daily_scheduler/
+      MemorySize: 1024
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.8
+      Role: !Sub 'arn:aws:iam::${AWS::AccountId}:role/lambda'
+      Architectures:
+        - x86_64
+      FunctionName: !Ref LambdaFunctionName
+      Environment:
+        Variables:
+          dev_site: !Ref DEV_SITE
+          site: !Ref SITE
+          expected: !Ref Expected
+      Events:
+        CWSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: !Ref Cron
+            Name: daily-cron-schedule
+            Description: Schedule for daily running cron
+            Enabled: true
+
+      VpcConfig:
+        SecurityGroupIds: 
+          - !GetAtt LambdaSG.GroupId
+        SubnetIds: !Ref PrivateSubnetIds
+
+
+
+  LambdaSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref VPCId
+      GroupDescription: SG for Lambda
+      Tags:
+        - Key: Name
+          Value: Lambda1SG
+
+  Lambda1SGIngressSelf:  
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      IpProtocol: -1
+      Description: Allow Security Group Ingress for self
+      GroupId: !GetAtt LambdaSG.GroupId
+      SourceSecurityGroupId: !GetAtt LambdaSG.GroupId
+
+  LambdaSGIngressAll:  
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      IpProtocol: -1
+      CidrIp: "172.31.0.0/16"
+      Description: Allow Security Group Ingress for VPC itself
+      GroupId: !GetAtt LambdaSG.GroupId
+
+  LambdaSGEgress:  
+    Type: 'AWS::EC2::SecurityGroupEgress'
+    Properties:
+      IpProtocol: -1
+      CidrIp: "0.0.0.0/0"
+      Description: Allow Security Group Egress
+      GroupId: !GetAtt LambdaSG.GroupId
+
