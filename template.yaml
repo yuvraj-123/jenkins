@@ -149,7 +149,7 @@ Resources:
             Resource: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
           - Effect: "Allow"
             Action: 
-              - "logs:CreateLogGroup"
+              - "logs:CreateLogStream"
               - "logs:PutLogEvents"
             Resource: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/backend_daily_scheduler:*"
       Roles: 
