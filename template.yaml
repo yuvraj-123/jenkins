@@ -136,3 +136,21 @@ Resources:
                 - "ec2:DescribeInstances"
                 - "ec2:AttachNetworkInterface"
                 Resource: '*'
+
+  RolePolicies: 
+    Type: "AWS::IAM::Policy"
+    Properties: 
+      PolicyName: "BasicLambdaExecutionPolicy"
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - Effect: "Allow"
+            Action: "logs:CreateLogGroup"
+            Resource: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: "Allow"
+            Action: 
+              - "logs:CreateLogGroup"
+              - "logs:PutLogEvents"
+            Resource: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/backend_daily_scheduler:*"
+      Roles: 
+        - Ref: "RootRole"            
