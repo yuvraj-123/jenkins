@@ -52,7 +52,8 @@ Resources:
       MemorySize: 1024
       Handler: lambda_function.lambda_handler
       Runtime: python3.8
-      Role: !Sub 'arn:aws:iam::${AWS::AccountId}:role/lambda'
+      Role: !Ref RootRole
+      # Role: !Sub 'arn:aws:iam::${AWS::AccountId}:role/lambda'
       Architectures:
         - x86_64
       FunctionName: !Ref LambdaFunctionName
@@ -110,3 +111,29 @@ Resources:
       Description: Allow Security Group Egress
       GroupId: !GetAtt LambdaSG.GroupId
 
+  RootRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: 
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: 
+                - "ec2:DescribeNetworkInterfaces"
+                - "ec2:CreateNetworkInterface"
+                - "ec2:DeleteNetworkInterface"
+                - "ec2:DescribeInstances"
+                - "ec2:AttachNetworkInterface"
+                Resource: '*'
