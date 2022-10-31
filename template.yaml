@@ -52,7 +52,7 @@ Resources:
       MemorySize: 1024
       Handler: lambda_function.lambda_handler
       Runtime: python3.8
-      Role: !Ref RootRole
+      Role: !GetAtt RootRole.Arn
       Architectures:
         - x86_64
       FunctionName: !Ref LambdaFunctionName
