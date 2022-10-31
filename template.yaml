@@ -146,6 +146,6 @@ Resources:
         Statement: 
           - Effect: "Allow"
             Action: "logs:CreateLogGroup"
-            Resource: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Resource: "arn:aws:logs:us-east-2:076240152287:*"
       Roles: 
         - !Ref RootRole
