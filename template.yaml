@@ -148,4 +148,4 @@ Resources:
             Action: "logs:CreateLogGroup"
             Resource: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
       Roles: 
-        - Ref: "RootRole"            
+        - !Ref RootRole
