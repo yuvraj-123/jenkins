@@ -20,7 +20,7 @@ Parameters:
     Description: cron expression
     Default: cron(0/2 * * * ? *)
 
-  DEV_SITE:
+  DEVSITE:
     Type: String
     Description: cron expression
     Default: https://xyz.revnue.com
@@ -58,7 +58,7 @@ Resources:
       FunctionName: !Ref LambdaFunctionName
       Environment:
         Variables:
-          dev_site: !Ref DEV_SITE
+          dev_site: !Ref DEVSITE
           site: !Ref SITE
           expected: !Ref Expected
       Events:
