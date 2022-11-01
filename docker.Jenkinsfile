@@ -30,7 +30,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script{
-                    docker.withRegistry('https://076240152287.dkr.ecr.us-east-2.amazonaws.com/lexa', 'ecr:us-east-2:sam-jenkins-demo-credentials') {
+                    docker.withRegistry('https://076240152287.dkr.ecr.us-east-2.amazonaws.com', 'ecr:us-east-2:sam-jenkins-demo-credentials') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
