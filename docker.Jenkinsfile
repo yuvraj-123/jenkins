@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    parameters {
+        string(Name: 'DockerImageName', Default: 'lexa')
+    }
     options {
         skipStagesAfterUnstable()
     }
@@ -15,8 +18,7 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                DockerImageName = 'lexadev'
-                 app = docker.build(DockerImageName, '-f Dockerfile . ')
+                    app = docker.build(${DockerImageName}, '-f Dockerfile . ')
                 }
             }
         }
