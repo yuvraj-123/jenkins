@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        string(Name: 'DockerImageName', Default: 'lexa')
+        string(name: 'DockerImageName', default: 'lexa')
     }
     options {
         skipStagesAfterUnstable()
