@@ -16,7 +16,7 @@ pipeline {
             steps { 
                 script{
                 DockerImageName = "lexadev"
-                 app = docker.build(DockerImageName, "-f Dockerfile" . )
+                 app = docker.build(DockerImageName, "-f Dockerfile . ")
                 }
             }
         }
